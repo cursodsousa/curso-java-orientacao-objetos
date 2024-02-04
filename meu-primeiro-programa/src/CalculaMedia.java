@@ -15,7 +15,13 @@ public class CalculaMedia {
 
         double media = ( nota1 + nota2 + nota3 ) / 3;
 
-        System.out.println("A média para o aluno é: " + media);
+        System.out.println("A média do aluno é: "+ media);
+
+        if ( media >= 6 ){
+            System.out.println("Aprovado!");
+        } else {
+            System.out.println("Reprovado!");
+        }
 
         teclado.close();
     }
