@@ -9,13 +9,13 @@ public class Conta {
     public Conta(Cliente titular, int numero, double saldo){
         this.titular = titular;
         this.numero = numero;
-        if(saldo >= -100){
+        if(saldo >= 0){
             this.saldo = saldo;
         }
     }
 
     public void setSaldo(double saldo){
-        if(saldo >= -100){
+        if(saldo >= 0){
             this.saldo = saldo;
         }else{
             System.out.println("Saldo não foi alterado. Valor negativo.");
