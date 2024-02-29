@@ -2,14 +2,19 @@ package sistemabancario;
 
 public class Cliente {
 
+    public static int quantidadeClientes;
+
     private String cpf;
     private String nome;
 
-    public Cliente(){}
+    public Cliente(){
+        incrementarClientes();
+    }
 
     public Cliente(String cpf, String nome){
         this.cpf = cpf;
         this.nome = nome;
+        incrementarClientes();
     }
     //padrão get e set
     public void setCpf(String cpf){
@@ -26,5 +31,9 @@ public class Cliente {
 
     public String getNome(){
         return this.nome;
+    }
+
+    public static void incrementarClientes(){
+        Cliente.quantidadeClientes++;
     }
 }
