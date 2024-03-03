@@ -8,4 +8,9 @@ public class Gerente extends Funcionario {
         double remuneracaoGerente = bonificacaoPadrao + 500;
         return remuneracaoGerente;
     }
+
+    @Override
+    public double calcularBonificacaoAnual() {
+        return getSalario() * 3;
+    }
 }

@@ -14,7 +14,18 @@ public class Main {
         gerente.setSalario(3000);
         gerente.setCpf("9876543210");
 
+        Funcionario outroGerente = new Tecnico();
+        Funcionario outroTecnico = new Gerente();
+
         gerente.imprimirRemuneracao();
 
+        System.out.println("Bonus anual: ");
+        System.out.println("Gerente: " + gerente.calcularBonificacaoAnual());
+        System.out.println("Tecnico: " + tecnico.calcularBonificacaoAnual());
+
+        ConexaoBancaria conexaoBancaria = new ConexaoBancaria();
+        GerenciaRH gerenciaRH = new GerenciaRH(conexaoBancaria);
+        gerenciaRH.pagarBonificacaoAnual(gerente);
+        gerenciaRH.pagarBonificacaoAnual(tecnico);
     }
 }
