@@ -6,22 +6,28 @@ import io.github.cursodsousa.clientes.dominio.exception.CpfInvalidoException;
 import io.github.cursodsousa.clientes.logicanegocio.Cadastro;
 import io.github.cursodsousa.clientes.logicanegocio.LogicaCadastroClienteFake;
 import io.github.cursodsousa.clientes.logicanegocio.LogicaCadastroMemoria;
+import io.github.cursodsousa.clientes.utilitario.ConversorIconParaByteArray;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.URL;
 
 public class TelaCadastro extends JFrame {
 
     private JLabel labelNome;
     private JLabel labelCpf;
     private JLabel labelSexo;
+    private JLabel labelFoto;
 
     private JTextField campoNome;
     private JTextField campoCpf;
     private JComboBox<TipoSexo> campoSexo;
 
     private JButton botaoSalvar;
+    private JButton botaoEscolherFoto;
 
     private Cadastro<Cliente> logicaCadastro;
 
@@ -80,6 +86,52 @@ public class TelaCadastro extends JFrame {
 
     private void adicionarComponentesFoto(){
 
+        ImageIcon imageIcon = obterImagemPadraoFoto();
+
+        labelFoto = new JLabel();
+        labelFoto.setIcon(imageIcon);
+        labelFoto.setBounds(240, 0 ,200,200);
+
+        getContentPane().add(labelFoto);
+
+        botaoEscolherFoto = new JButton("Alterar Foto");
+        botaoEscolherFoto.setBounds(260, 200, 160, 20);
+        botaoEscolherFoto.addActionListener(botaoEscolherFotoActionListener());
+
+        getContentPane().add(botaoEscolherFoto);
+
+    }
+
+    private ImageIcon obterImagemPadraoFoto() {
+        String caminhoArquivo =
+                "/io/github/cursodsousa/clientes/apresentacao/img.png";
+        URL localizacao = getClass().getResource(caminhoArquivo);
+        ImageIcon imageIcon = new ImageIcon(localizacao);
+
+        Image imageRedimensionada = imageIcon.getImage()
+                .getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+
+        imageIcon = new ImageIcon(imageRedimensionada);
+        return imageIcon;
+    }
+
+    private ActionListener botaoEscolherFotoActionListener(){
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                int opcao = fileChooser.showOpenDialog(TelaCadastro.this);
+
+                if(opcao == JFileChooser.APPROVE_OPTION){
+                    File arquivoSelecionado = fileChooser.getSelectedFile();
+                    String caminho = arquivoSelecionado.getAbsolutePath();
+
+                    ImageIcon imageIcon = new ImageIcon(caminho);
+                    labelFoto.setIcon(imageIcon);
+
+                }
+            }
+        };
     }
 
     private ActionListener botaoSalvarActionListener(){
@@ -91,9 +143,18 @@ public class TelaCadastro extends JFrame {
                 cliente.setCpf(campoCpf.getText());
                 cliente.setSexo( (TipoSexo) campoSexo.getSelectedItem());
 
+                byte[] byteArray = ConversorIconParaByteArray.converter(labelFoto.getIcon());
+                cliente.setFoto(byteArray);
+
                 try {
                     logicaCadastro.salvar(cliente);
-                    logicaCadastro.imprimirRegistros();
+                    campoNome.setText("");
+                    campoCpf.setText("");
+                    campoSexo.setSelectedIndex(0);
+
+                    labelFoto.setIcon(TelaCadastro.this.obterImagemPadraoFoto());
+
+                    JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
                 } catch (CpfInvalidoException ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 } catch (Exception ex){
