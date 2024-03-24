@@ -1,4 +1,4 @@
-package io.github.cursodsousa.clientes.colecoes;
+package estudo.colecoes;
 
 import io.github.cursodsousa.clientes.dominio.Cliente;
 

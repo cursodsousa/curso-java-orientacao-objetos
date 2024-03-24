@@ -3,10 +3,10 @@ package io.github.cursodsousa.clientes.dominio;
 import io.github.cursodsousa.clientes.dominio.enums.TipoSexo;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Comparator;
 import java.util.UUID;
 
-public class Cliente {
+public class Cliente implements Comparable<Cliente> {
 
     private UUID codigo;
     private String nome;
@@ -89,5 +89,24 @@ public class Cliente {
         result = 31 * result + cpf.hashCode();
         result = 31 * result + sexo.hashCode();
         return result;
+    }
+
+    /**
+     *
+     * @param o the object to be compared.
+     * @return
+     *
+     * 0 -> são iguais -> 1 == 1
+     * 1 -> é maior -> 2 > 1
+     * -1 -> é menor -> 1 < 2
+     */
+
+    @Override
+    public int compareTo(Cliente o) {
+        int fator = this.nome.compareTo(o.getNome());
+        if(fator == 0){
+            fator = this.sexo.equals(TipoSexo.F) ? -1 : 1;
+        }
+        return fator;
     }
 }
