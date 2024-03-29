@@ -6,6 +6,7 @@ import io.github.cursodsousa.clientes.utilitario.GerenciadorArquivos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class LogicaCadastroMemoria implements Cadastro<Cliente> {
@@ -24,7 +25,7 @@ public class LogicaCadastroMemoria implements Cadastro<Cliente> {
     }
 
     @Override
-    public Cliente buscar(UUID codigo) {
+    public Optional<Cliente> buscar(UUID codigo) {
 
         Cliente clienteEncontrado = null;
 
@@ -35,15 +36,15 @@ public class LogicaCadastroMemoria implements Cadastro<Cliente> {
             }
         }
 
-        return clienteEncontrado;
+        return Optional.ofNullable(clienteEncontrado);
     }
 
     @Override
     public void deletar(UUID codigo) {
-        Cliente clienteEncontrado = this.buscar(codigo);
-        if(clienteEncontrado != null){
-            this.lista.remove(clienteEncontrado);
-        }
+        this.buscar(codigo)
+                .ifPresentOrElse(
+                        cliente -> lista.remove(cliente),
+                        () -> System.out.println("Cliente não removido, pois codigo era inexistente") );
     }
 
     @Override

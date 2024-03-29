@@ -3,6 +3,7 @@ package io.github.cursodsousa.clientes.logicanegocio;
 import io.github.cursodsousa.clientes.dominio.Cliente;
 
 import javax.swing.*;
+import java.util.Optional;
 import java.util.UUID;
 
 public class LogicaCadastroClienteFake implements Cadastro<Cliente> {
@@ -13,7 +14,7 @@ public class LogicaCadastroClienteFake implements Cadastro<Cliente> {
     }
 
     @Override
-    public Cliente buscar(UUID codigo) {
+    public Optional<Cliente> buscar(UUID codigo) {
         return null;
     }
 
