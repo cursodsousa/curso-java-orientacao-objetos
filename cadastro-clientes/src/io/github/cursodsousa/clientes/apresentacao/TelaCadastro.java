@@ -1,11 +1,12 @@
 package io.github.cursodsousa.clientes.apresentacao;
 
+import io.github.cursodsousa.clientes.dados.ClienteDAO;
+import io.github.cursodsousa.clientes.dados.FabricaConexoes;
 import io.github.cursodsousa.clientes.dominio.Cliente;
 import io.github.cursodsousa.clientes.dominio.enums.TipoSexo;
 import io.github.cursodsousa.clientes.dominio.exception.CpfInvalidoException;
 import io.github.cursodsousa.clientes.logicanegocio.Cadastro;
-import io.github.cursodsousa.clientes.logicanegocio.LogicaCadastroClienteFake;
-import io.github.cursodsousa.clientes.logicanegocio.LogicaCadastroMemoria;
+import io.github.cursodsousa.clientes.logicanegocio.LogicaCadastroBancoDados;
 import io.github.cursodsousa.clientes.utilitario.ConversorIconParaByteArray;
 
 import javax.swing.*;
@@ -21,8 +22,10 @@ public class TelaCadastro extends JFrame {
     private JLabel labelCpf;
     private JLabel labelSexo;
     private JLabel labelFoto;
+    private JLabel labelIdade;
 
     private JTextField campoNome;
+    private JTextField campoIdade;
     private JTextField campoCpf;
     private JComboBox<TipoSexo> campoSexo;
 
@@ -33,7 +36,8 @@ public class TelaCadastro extends JFrame {
 
     public TelaCadastro(){
         construirTela();
-        this.logicaCadastro = new LogicaCadastroMemoria();
+        var clienteDAO = new ClienteDAO(FabricaConexoes.criarConexao());
+        this.logicaCadastro = new LogicaCadastroBancoDados(clienteDAO);
     }
 
     private void construirTela(){
@@ -72,11 +76,19 @@ public class TelaCadastro extends JFrame {
         campoSexo = new JComboBox<>(tipoSexo);
         campoSexo.setBounds(20, 120, 200 ,20);
         getContentPane().add(campoSexo);
+
+        labelIdade = new JLabel("Idade:");
+        labelIdade.setBounds(20, 140, 200, 20);
+        getContentPane().add(labelIdade);
+
+        campoIdade = new JTextField();
+        campoIdade.setBounds(20, 160, 200, 20);
+        getContentPane().add(campoIdade);
     }
 
     private void adicionarBotoes(){
         botaoSalvar = new JButton("Salvar");
-        botaoSalvar.setBounds(20, 160, 100, 20);
+        botaoSalvar.setBounds(20, 200, 100, 20);
 
         ActionListener acaoBotaoSalvar = this.botaoSalvarActionListener();
         botaoSalvar.addActionListener(acaoBotaoSalvar);
@@ -142,6 +154,12 @@ public class TelaCadastro extends JFrame {
                 cliente.setNome(campoNome.getText());
                 cliente.setCpf(campoCpf.getText());
                 cliente.setSexo( (TipoSexo) campoSexo.getSelectedItem());
+
+                try {
+                    cliente.setIdade(Integer.valueOf(campoIdade.getText()));
+                }catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(null, "Digite uma idade Válida.");
+                }
 
                 byte[] byteArray = ConversorIconParaByteArray.converter(labelFoto.getIcon());
                 cliente.setFoto(byteArray);

@@ -3,7 +3,6 @@ package io.github.cursodsousa.clientes.dominio;
 import io.github.cursodsousa.clientes.dominio.enums.TipoSexo;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.UUID;
 
 public class Cliente implements Comparable<Cliente> {
